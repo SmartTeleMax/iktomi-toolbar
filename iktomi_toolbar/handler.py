@@ -44,11 +44,11 @@ class DebugToolbar(object):
     )
 
     panel_classes = []
-    enable = getattr(cfg, 'INSTOOLBAR', False)
+    enable = getattr(cfg, 'IKTOMI_TOOLBAR', False)
 
     def __init__(self):
         if self.enable:
-            self.panels = getattr(cfg, 'INSTOOLBAR_PANELS', self.DEFAULT_PANELS)
+            self.panels = getattr(cfg, 'IKTOMI_TOOLBAR_PANELS', self.DEFAULT_PANELS)
             self.jinja_env = Environment(loader=FileSystemLoader(
                 TEMPLATES_PATH
             ))
