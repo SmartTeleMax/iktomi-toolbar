@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th>Library</th>
+      <th>Version</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in libraries.iteritems() %}
+      <tr class="{{ loop.cycle('flDebugOdd', 'flDebugEven') }}">
+        <td>{{ key|escape }}</td>
+        <td>{{ value|escape }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,29 @@
+<table>
+  <thead>
+    <tr>
+      <th>№</th>
+      <th>&nbsp;(ms)</th>
+      <th>Action</th>
+      <th>Context</th>
+      <th>Query</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  {% for query in queries %}
+      <tr class="{{ loop.cycle('flDebugOdd', 'flDebugEven') }}">
+        <td>{{ loop.index }}</td>
+        <td>{{ '%.4f'|format(query['time'] * 1000) }}</td>
+        <td>{{ query.action }}</td>
+        <td title="{{ query.context_long }}">
+            {{ query.params }}
+        </td>
+        <td class="syntax">
+          <div class="flDebugSqlWrap">
+            <div class="flDebugSql">{{ query.sql|safe }}</div>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
