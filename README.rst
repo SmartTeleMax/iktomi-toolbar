@@ -2,7 +2,7 @@ Iktomi Debug-toolbar
 ===================
 
 This is a port of `flask-debug-toolbar <https://github.com/mgood/flask-debugtoolbar>`_
-for Flask applications.
+for Iktomi applications.
 If enabled, the toolbar will automatically be injected into Jinja templates.
 
 
