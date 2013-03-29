@@ -11,7 +11,7 @@ Usage
 
 You can attach the toolpar to an application by chaining it before one::
 
-  app = instoolbar.handler() | app
+  app = iktomi_toolbar.handler() | app
 
 To enable the toolbar, set following variable in your development cfg.py::
 
