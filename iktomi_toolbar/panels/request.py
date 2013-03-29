@@ -12,7 +12,7 @@ class Request(DebugPanel):
     def content(self):
         context = self.context.copy()
         context.update({'cookies': tuple((k, self.request.cookies.get(k))
-                                          for k in self.request.cookies),
+                                         for k in self.request.cookies),
                         'get': tuple(self.get_GET()),
                         'post': self.get_POST()})
 
@@ -22,9 +22,7 @@ class Request(DebugPanel):
         self.request = request.request
 
     def get_GET(self):
-        for arg in self.request.environ['QUERY_STRING'].split('&'):
-            if arg:
-                yield arg.split('=')
+        return self.request.str_GET.mixed().items()
 
     def get_POST(self):
-        return None
+        return self.request.str_POST.mixed().items()
