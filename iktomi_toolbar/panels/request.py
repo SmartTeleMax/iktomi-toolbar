@@ -1,4 +1,4 @@
-from iktomi_toolbar.panels import DebugPanel
+from instoolbar.panels import DebugPanel
 
 
 class Request(DebugPanel):
@@ -13,7 +13,7 @@ class Request(DebugPanel):
         context = self.context.copy()
         context.update({'cookies': tuple((k, self.request.cookies.get(k))
                                          for k in self.request.cookies),
-                        'get': tuple(self.get_GET()),
+                        'get': self.get_GET(),
                         'post': self.get_POST()})
 
         return self.render('panels/request_vars.html', context)
@@ -21,8 +21,18 @@ class Request(DebugPanel):
     def process_request(self, request):
         self.request = request.request
 
+    def decode_args(self, arg):
+        name, value = arg
+
+        yield name.decode('utf-8')
+
+        if isinstance(value, (list, tuple)):
+            yield [v.decode('utf-8') for v in value]
+        else:
+            yield value.decode('utf-8')
+
     def get_GET(self):
-        return self.request.str_GET.mixed().items()
+        return map(self.decode_args, self.request.str_GET.mixed().items())
 
     def get_POST(self):
-        return self.request.str_POST.mixed().items()
+        return map(self.decode_args, self.request.str_POST.mixed().items())
