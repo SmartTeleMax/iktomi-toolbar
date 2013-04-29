@@ -55,10 +55,16 @@ class Storage(object):
     def new(self, di):
         self.glob += 1
         self.current = self.glob
-        self.queries[self.current] = di
+        try:
+            self.queries[self.current] = di
+        except KeyError:
+            pass
 
     def update(self, di):
-        self.queries[self.current].update(di)
+        try:
+            self.queries[self.current].update(di)
+        except KeyError:
+            pass
 
     def get_and_clear(self):
         for query in self.queries.itervalues():
