@@ -1,4 +1,4 @@
-from instoolbar.panels import DebugPanel
+from iktomi_toolbar.panels import DebugPanel
 
 
 class Request(DebugPanel):
