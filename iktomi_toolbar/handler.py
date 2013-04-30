@@ -91,8 +91,10 @@ class Tmpl(environment.BoundTemplate):
         response_html = self.template.render(template_name,
                                              **self._vars(__data))
 
-        response_html = replace_insensitive(response_html, '</body>',
-                                            self.toolbar.render_panel(self) + '</body>')
+        response_html = replace_insensitive(
+            response_html, '</body>',
+            self.toolbar.render_panel(self) + '</body>'
+        )
         return Response(response_html, content_type=content_type)
 
 
@@ -104,13 +106,17 @@ class handler(DebugToolbar, WebHandler):
 
     def toolbar(self, env, data):
         """This method should be overridden in subclasses."""
-        if self.enable:
-            self.process_request(env)
-            debug_template = Tmpl(env, environment.template_loader)
-            debug_template.toolbar = self
-            debug_template.process_response = self.process_response
-            env.template = debug_template
-            env.render_to_response = debug_template.render_to_response
-        result = self.next_handler(env, data)
-        return result
+        try:
+            if self.enable:
+                self.process_request(env)
+                debug_template = Tmpl(env, environment.template_loader)
+                debug_template.toolbar = self
+                debug_template.process_response = self.process_response
+                env.template = debug_template
+                env.render_to_response = debug_template.render_to_response
+            return self.next_handler(env, data)
+        except Exception as e:
+            print(traceback.print_exc())
+            raise e
+
     __call__ = toolbar  # For nice traceback
