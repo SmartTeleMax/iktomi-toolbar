@@ -4,7 +4,7 @@ except ImportError:
     pass  # Will fail on Win32 systems
 import time
 
-from iktomi_toolbar.panels import DebugPanel
+from iktomi.toolbar.panels import DebugPanel
 
 
 class Timer(DebugPanel):

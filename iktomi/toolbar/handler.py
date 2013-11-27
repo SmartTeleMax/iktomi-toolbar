@@ -35,12 +35,12 @@ def read_js():
 class DebugToolbar(object):
 
     DEFAULT_PANELS = (
-        'iktomi_toolbar.panels.sqla',  # sqlalchemy queries
-        'iktomi_toolbar.panels.logger',  # logging messages from view
-        'iktomi_toolbar.panels.headers',  # headers of request
-        'iktomi_toolbar.panels.request',  # request information
-        'iktomi_toolbar.panels.timer',  # time of request
-        'iktomi_toolbar.panels.versions'  # versions of few installed libraries
+        'iktomi.toolbar.panels.sqla',  # sqlalchemy queries
+        'iktomi.toolbar.panels.logger',  # logging messages from view
+        'iktomi.toolbar.panels.headers',  # headers of request
+        'iktomi.toolbar.panels.request',  # request information
+        'iktomi.toolbar.panels.timer',  # time of request
+        'iktomi.toolbar.panels.versions'  # versions of few installed libraries
     )
 
     panel_classes = []

@@ -11,7 +11,7 @@ Usage
 
 You can attach the toolpar to an application by chaining it before one::
 
-  app = iktomi_toolbar.handler() | app
+  app = iktomi.toolbar.handler() | app
 
 To enable the toolbar, set following variable in your development cfg.py::
 
@@ -20,11 +20,11 @@ To enable the toolbar, set following variable in your development cfg.py::
 Panels (by default enabled all)::
 
   IKTOMI_TOOLBAR_PANELS = (
-    'iktomi_toolbar.panels.sqla',  # sqlalchemy queries
-    'iktomi_toolbar.panels.logger',  # logging messages from view
-    'iktomi_toolbar.panels.headers',  # headers of request
-    'iktomi_toolbar.panels.request',  # request information
-    'iktomi_toolbar.panels.timer',  # time of request
-    'iktomi_toolbar.panels.versions'  # versions of few installed libraries
+    'iktomi.toolbar.panels.sqla',  # sqlalchemy queries
+    'iktomi.toolbar.panels.logger',  # logging messages from view
+    'iktomi.toolbar.panels.headers',  # headers of request
+    'iktomi.toolbar.panels.request',  # request information
+    'iktomi.toolbar.panels.timer',  # time of request
+    'iktomi.toolbar.panels.versions'  # versions of few installed libraries
   )
 

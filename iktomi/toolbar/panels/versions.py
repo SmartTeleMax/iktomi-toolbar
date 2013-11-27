@@ -1,5 +1,5 @@
-from iktomi_toolbar.panels import DebugPanel
-import iktomi_toolbar
+from iktomi.toolbar.panels import DebugPanel
+import iktomi.toolbar
 
 
 class Versions(DebugPanel):
@@ -13,7 +13,7 @@ class Versions(DebugPanel):
                  'simplejson',
                  'html5lib',
                  'dateutil',
-                 'iktomi_toolbar',
+                 'iktomi.toolbar',
                  'instesting',
                  'clevercss',
                  'memcache',
@@ -35,7 +35,7 @@ class Versions(DebugPanel):
                 print "Can't import `{0}`: {1}".format(lib, e)
 
     def nav_subtitle(self):
-        return iktomi_toolbar.__version__
+        return iktomi.toolbar.__version__
 
     def content(self):
 

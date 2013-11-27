@@ -1,8 +1,8 @@
 import time
 from functools import partial
 
-from iktomi_toolbar.panels import DebugPanel
-from iktomi_toolbar.utils import Storage
+from iktomi.toolbar.panels import DebugPanel
+from iktomi.toolbar.utils import Storage
 
 from sqlalchemy import event
 from sqlalchemy.engine import Engine

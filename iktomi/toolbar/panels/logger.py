@@ -6,8 +6,8 @@ try:
 except ImportError:
     threading = None
 
-from iktomi_toolbar.panels import DebugPanel
-from iktomi_toolbar.utils import format_fname, Storage
+from iktomi.toolbar.panels import DebugPanel
+from iktomi.toolbar.utils import format_fname, Storage
 
 
 class ThreadTrackingHandler(logging.Handler):
