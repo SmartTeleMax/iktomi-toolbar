@@ -14,10 +14,9 @@ class Versions(DebugPanel):
                  'html5lib',
                  'dateutil',
                  'iktomi.toolbar',
-                 'instesting',
-                 'clevercss',
                  'memcache',
-                 'testalchemy')
+                 #'testalchemy'
+                 )
 
     def __init__(self, *arg, **kwarg):
         super(Versions, self).__init__(*arg, **kwarg)

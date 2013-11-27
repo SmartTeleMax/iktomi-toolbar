@@ -32,7 +32,7 @@ class Request(DebugPanel):
             yield value.decode('utf-8')
 
     def get_GET(self):
-        return map(self.decode_args, self.request.str_GET.mixed().items())
+        return map(self.decode_args, self.request.GET.mixed().items())
 
     def get_POST(self):
-        return map(self.decode_args, self.request.str_POST.mixed().items())
+        return map(self.decode_args, self.request.POST.mixed().items())

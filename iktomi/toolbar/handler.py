@@ -4,15 +4,11 @@ from __future__ import with_statement
 import os
 import traceback
 
-import cfg
-import environment
-
 from iktomi.web.core import WebHandler
-from iktomi.web import Response
 
 from jinja2 import Environment, FileSystemLoader
 
-from utils import replace_insensitive
+from .utils import replace_insensitive
 
 __all__ = ['handler']
 
@@ -44,9 +40,9 @@ class DebugToolbar(object):
     )
 
     panel_classes = []
-    enable = getattr(cfg, 'IKTOMI_TOOLBAR', False)
 
-    def __init__(self):
+    def __init__(self, cfg):
+        self.enable = getattr(cfg, 'IKTOMI_TOOLBAR', False)
         if self.enable:
             self.panels = getattr(cfg, 'IKTOMI_TOOLBAR_PANELS', self.DEFAULT_PANELS)
             self.jinja_env = Environment(loader=FileSystemLoader(
@@ -84,20 +80,6 @@ class DebugToolbar(object):
             panel.process_response(response)
 
 
-class Tmpl(environment.BoundTemplate):
-
-    def render_to_response(self, template_name, __data,
-                           content_type="text/html"):
-        response_html = self.template.render(template_name,
-                                             **self._vars(__data))
-
-        response_html = replace_insensitive(
-            response_html, '</body>',
-            self.toolbar.render_panel(self) + '</body>'
-        )
-        return Response(response_html, content_type=content_type)
-
-
 class handler(DebugToolbar, WebHandler):
 
     def process_request(self, request):
@@ -106,17 +88,20 @@ class handler(DebugToolbar, WebHandler):
 
     def toolbar(self, env, data):
         """This method should be overridden in subclasses."""
-        try:
-            if self.enable:
-                self.process_request(env)
-                debug_template = Tmpl(env, environment.template_loader)
-                debug_template.toolbar = self
-                debug_template.process_response = self.process_response
-                env.template = debug_template
-                env.render_to_response = debug_template.render_to_response
+        if not self.enable:
             return self.next_handler(env, data)
+        try:
+            self.process_request(env)
+            resp = self.next_handler(env, data)
+            if resp.content_type == 'text/html':
+                resp.body = replace_insensitive(
+                    resp.body.decode('utf-8'), '</body>',
+                    self.render_panel(env) + '</body>'
+                ).encode('utf-8')
+            return resp
         except Exception as e:
             print(traceback.print_exc())
             raise e
+
 
     __call__ = toolbar  # For nice traceback
