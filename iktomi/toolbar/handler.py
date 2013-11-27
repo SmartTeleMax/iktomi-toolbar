@@ -32,7 +32,8 @@ class DebugToolbar(object):
 
     DEFAULT_PANELS = (
         'iktomi.toolbar.panels.sqla',  # sqlalchemy queries
-        'iktomi.toolbar.panels.logger',  # logging messages from view
+        # XXX this panel breaks exception logging
+        #'iktomi.toolbar.panels.logger',  # logging messages from view
         'iktomi.toolbar.panels.headers',  # headers of request
         'iktomi.toolbar.panels.request',  # request information
         'iktomi.toolbar.panels.timer',  # time of request
@@ -90,18 +91,14 @@ class handler(DebugToolbar, WebHandler):
         """This method should be overridden in subclasses."""
         if not self.enable:
             return self.next_handler(env, data)
-        try:
-            self.process_request(env)
-            resp = self.next_handler(env, data)
-            if resp.content_type == 'text/html':
-                resp.body = replace_insensitive(
-                    resp.body.decode('utf-8'), '</body>',
-                    self.render_panel(env) + '</body>'
-                ).encode('utf-8')
-            return resp
-        except Exception as e:
-            print(traceback.print_exc())
-            raise e
+        self.process_request(env)
+        resp = self.next_handler(env, data)
+        if resp.content_type == 'text/html':
+            resp.body = replace_insensitive(
+                resp.body.decode('utf-8'), '</body>',
+                self.render_panel(env) + '</body>'
+            ).encode('utf-8')
+        return resp
 
 
     __call__ = toolbar  # For nice traceback
