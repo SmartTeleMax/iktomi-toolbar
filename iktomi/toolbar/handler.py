@@ -2,8 +2,9 @@
 from __future__ import with_statement
 
 import os
-import traceback
 
+import struct
+from time import time
 from iktomi.web.core import WebHandler
 
 from jinja2 import Environment, FileSystemLoader
@@ -57,11 +58,7 @@ class DebugToolbar(object):
             dot = panel_path.rindex('.')
             panel_classname = panel_path[dot + 1:]
 
-            try:
-                mod = __import__(panel_path, {}, {}, [''])
-            except ImportError:
-                print traceback.print_exc()
-                continue
+            mod = __import__(panel_path, {}, {}, [''])
             panel_class = getattr(mod, panel_classname.capitalize())(
                 jinja_env=self.jinja_env
             )
@@ -87,13 +84,24 @@ class handler(DebugToolbar, WebHandler):
         for panel in self.panel_classes:
             panel.process_request(request)
 
+    @staticmethod
+    def _uid():
+        # Time part is repeated in about 3 days period
+        time_part = struct.pack('!d', time())[3:]
+        return ('toolbar'+time_part+os.urandom(1)).encode('hex')
+
     def toolbar(self, env, data):
         """This method should be overridden in subclasses."""
         if not self.enable:
             return self.next_handler(env, data)
         self.process_request(env)
         resp = self.next_handler(env, data)
-        if resp.content_type == 'text/html':
+        request = env.request
+        if request.is_xhr:
+            if request.cookies.get('window-name'):
+                # XXX put in cahe and give a link
+                pass
+        elif resp.content_type == 'text/html':
             resp.body = replace_insensitive(
                 resp.body.decode('utf-8'), '</body>',
                 self.render_panel(env) + '</body>'

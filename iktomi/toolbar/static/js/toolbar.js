@@ -189,4 +189,55 @@
     });
     window.fldt = fldt;
 
+    function addXMLRequestCallback(callback){
+        var oldSend, i;
+        if( XMLHttpRequest.callbacks ) {
+            // we've already overridden send() so just add the callback
+            XMLHttpRequest.callbacks.push( callback );
+        } else {
+            // create a callback queue
+            XMLHttpRequest.callbacks = [callback];
+            // store the native send()
+            oldSend = XMLHttpRequest.prototype.send;
+            // override the native send()
+            XMLHttpRequest.prototype.send = function(){
+                // process the callback queue
+                // the xhr instance is passed into each callback but seems pretty useless
+                // you can't tell what its destination is or call abort() without an error
+                // so only really good for logging that a request has happened
+                // I could be wrong, I hope so...
+                // EDIT: I suppose you could override the onreadystatechange handler though
+                for( i = 0; i < XMLHttpRequest.callbacks.length; i++ ) {
+                    XMLHttpRequest.callbacks[i]( this );
+                }
+                // call the native send()
+                oldSend.apply(this, arguments);
+            }
+        }
+    }
+
+    function makeId() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 10; i++ ){
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return text;
+    }
+    
+    addXMLRequestCallback( function( xhr ) {
+        window.sessionStorage['window-name'] = window.sessionStorage['window-name'] || makeId();
+        $.cookie('window-name', window.sessionStorage['window-name']);
+        console.log(document.cookie, window.sessionStorage['window-name'])
+    });
+
+    window.setInterval(function(){
+        var toolbar = $.cookie('toolbar-'+window.sessionStorage['window-name']);
+        if (toolbar){
+            // XXX take link from cookies and show
+        }
+    }, 100)
+
 })(jQuery.noConflict(true));
