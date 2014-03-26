@@ -21,15 +21,20 @@ class Request(DebugPanel):
     def process_request(self, request):
         self.request = request.request
 
+    def force_unicode(self, val):
+        if not isinstance(val, unicode):
+            return val.decode('utf-8')
+        return val
+
     def decode_args(self, arg):
         name, value = arg
 
-        yield name.decode('utf-8')
+        yield self.force_unicode(name)
 
         if isinstance(value, (list, tuple)):
-            yield [v.decode('utf-8') for v in value]
+            yield [self.force_unicode(v) for v in value]
         else:
-            yield value.decode('utf-8')
+            yield self.force_unicode(value)
 
     def get_GET(self):
         return map(self.decode_args, self.request.GET.mixed().items())
