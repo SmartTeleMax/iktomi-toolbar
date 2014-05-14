@@ -48,17 +48,24 @@ class Sqla(DebugPanel):
         return 'SQLAlchemy (%s)' % self.count
     nav_title = title
 
+    def nav_subtitle(self):
+        return 'TOTAL: %0.2fms' % (self.total_time * 1000)
+
     def __init__(self, *args, **kwargs):
         super(Sqla, self).__init__(*args, **kwargs)
-        self.queries = {}
+        self.queries = []
 
     def content(self):
-
         context = self.context.copy()
         context.update({'queries': self.queries})
-
         return self.render('panels/sqlalchemy.html', context)
 
-    def process_response(self, request):
+    def process_request(self, env):
+        self.old_queries = list(log.get_and_clear())
+    #    for engine in set(env.db._Session__binds.values()):
+    #        env.db.execute('RESET QUERY CACHE;', bind=engine)
+
+    def process_response(self, env):
         self.count = log.glob
-        self.queries = log.get_and_clear()
+        self.queries = list(log.get_and_clear())
+        self.total_time = sum(x['time'] for x in self.queries)
