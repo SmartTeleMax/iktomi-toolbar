@@ -5,6 +5,7 @@ import os
 
 import struct
 from time import time
+from webob import Response
 from iktomi.web.core import WebHandler
 
 from jinja2 import Environment, FileSystemLoader
@@ -101,7 +102,8 @@ class handler(DebugToolbar, WebHandler):
             if request.cookies.get('window-name'):
                 # XXX put in cahe and give a link
                 pass
-        elif resp.content_type == 'text/html':
+        elif isinstance(resp, Response) and \
+                resp.content_type == 'text/html':
             resp.body = replace_insensitive(
                 resp.body.decode('utf-8'), '</body>',
                 self.render_panel(env) + '</body>'
