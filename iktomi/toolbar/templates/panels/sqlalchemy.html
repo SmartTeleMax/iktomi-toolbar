@@ -16,12 +16,20 @@
         <td>{{ '%.4f'|format(query['time'] * 1000) }}</td>
         <td>{{ query.action }}</td>
         <td title="{{ query.context_long }}">
+          <div style="width: 100px; overflow-x: auto">
             {{ query.params }}
+          </div>
         </td>
         <td class="syntax">
           <div class="flDebugSqlWrap">
             <div class="flDebugSql">{{ query.sql|safe }}</div>
           </div>
+        </td>
+        <td class="syntax">
+          <button onclick="this.nextSibling.style.display=''; this.parentNode.removeChild(this)"
+                  style="cursor: pointer; border: 1px solid #aaa; padding: 2px 5px;">Show traceback</button>
+          {{- '' -}}
+          <div style="white-space: pre; font-size: 9px;display: none">{{- query.traceback|forceescape -}}</div>
         </td>
       </tr>
     {% endfor %}

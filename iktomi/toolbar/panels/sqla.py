@@ -1,4 +1,5 @@
 import time
+import traceback
 from functools import partial
 
 from iktomi.toolbar.panels import DebugPanel
@@ -11,13 +12,31 @@ try:
     import sqlparse
 except ImportError:
     format_sql = lambda x: x
+    sql_action = lambda x: x.split('`', 1)[0]
 else:
     format_sql = partial(sqlparse.format,
                          reindent=True,
                          keyword_case='upper')
+    sql_action = lambda x: sqlparse.parse(x)[0].get_type()
 
 
 log = Storage()
+
+def short_traceback(stack):
+    tb = []
+    for frame in stack:
+        fl, line, module, code = frame
+        if '/wsgiref/' in fl:
+            tb = []
+        if '/iktomi/web/filters.py' in fl:
+            tb = []
+        if '/iktomi/' in fl or '/sqlalchemy/' in fl:
+            pass
+        else:
+            tb.append(frame)
+
+    formatted = traceback.format_list(tb)
+    return ''.join(formatted).decode('utf-8')
 
 
 @event.listens_for(Engine, "before_cursor_execute")
@@ -26,9 +45,10 @@ def before_cursor_execute(conn, cursor, statement,
     context._query_start_time = time.time()
     log.new({'query': statement,
              'params': parameters,
-             'action': statement.split('`', 1)[0],
+             'action': sql_action(statement),
              'sql': format_sql(statement),
              'context': context,
+             'traceback': short_traceback(traceback.extract_stack()),
              'time': context._query_start_time})
 
 
