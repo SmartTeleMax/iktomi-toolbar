@@ -3,9 +3,9 @@
 from distutils.core import setup
 
 setup(
-    name='iktomi.cms',
+    name='iktomi.toolbar',
     version='0.1',
-    packages=['iktomi', 'iktomi.cms'],
+    packages=['iktomi', 'iktomi.toolbar'],
     requires=[
         'webob (>1.1b1)',
         'iktomi (>0.3)',
