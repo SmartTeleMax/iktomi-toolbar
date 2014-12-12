@@ -6,6 +6,14 @@ setup(
     name='iktomi.toolbar',
     version='0.1',
     packages=['iktomi', 'iktomi.toolbar'],
+    package_dir={
+        'iktomi.toolbar': 'iktomi/toolbar'
+    },
+    package_data={
+        'iktomi.toolbar': ['templates/*.html',
+                           'templates/*/*.html',
+                           'static/js/*.js'],
+    },
     requires=[
         'webob (>1.1b1)',
         'iktomi (>0.3)',
