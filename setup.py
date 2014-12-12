@@ -5,7 +5,7 @@ from distutils.core import setup
 setup(
     name='iktomi.toolbar',
     version='0.1',
-    packages=['iktomi', 'iktomi.toolbar'],
+    packages=['iktomi', 'iktomi.toolbar', 'iktomi.toolbar.panels'],
     package_dir={
         'iktomi.toolbar': 'iktomi/toolbar'
     },
