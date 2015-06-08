@@ -7,6 +7,7 @@ class Versions(DebugPanel):
     name = 'Version'
     has_content = True
 
+    # Hardcoded!
     libraries = ('webob',
                  'sqlalchemy',
                  'jinja2',
@@ -31,7 +32,7 @@ class Versions(DebugPanel):
                     self.versions.update({lib: version})
                 del mod
             except ImportError, e:
-                print "Can't import `{0}`: {1}".format(lib, e)
+                pass
 
     def nav_subtitle(self):
         return iktomi.toolbar.__version__

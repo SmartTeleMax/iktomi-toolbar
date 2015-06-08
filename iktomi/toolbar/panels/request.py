@@ -23,7 +23,10 @@ class Request(DebugPanel):
 
     def force_unicode(self, val):
         if not isinstance(val, unicode):
-            return val.decode('utf-8')
+            try:
+                return val.decode('utf-8')
+            except Exception:
+                return u'<Undecodable string>'
         return val
 
     def decode_args(self, arg):
